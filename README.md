@@ -7,7 +7,7 @@ https://arxiv.org/abs/2105.00324
 ## Installation
 
 ```bash
-git clone https://github.com/cortical-team/neko.git
+git clone https://github.com/byin-cwi/neko.git
 cd neko
 pip install -e .
 ```
