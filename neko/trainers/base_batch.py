@@ -92,6 +92,6 @@ class Trainer(BaseTrainer):
         self.learning_rule.pretraining_initialization()
 
     def learning_rules_step(self, x, y,epoch):
-        x = F.avg_pool3d(x,kernel_size=(1,4,4),stride=(1,4,4)).reshape(-1,self.T,2048).cuda()
+        x = x.cuda() # you can add preprocess here
         y = F.one_hot(y,self.n_classes).float()
         return self.learning_rule.step(x, y)
