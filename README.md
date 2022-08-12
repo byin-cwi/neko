@@ -1,5 +1,6 @@
 # Neko: a Library for Exploring Neuromorphic Learning Rules
-
+## Update:
+add batch trainer: the trainer can directly read inputs from torch dataloader without to load .npy files. It saves a lot memory. 
 ## Paper
 https://arxiv.org/abs/2105.00324
 
