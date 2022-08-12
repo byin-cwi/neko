@@ -17,20 +17,39 @@ Train a RSNN with ALIF neurons with e-prop on MNIST:
 
 ```python
 from neko.backend import pytorch_backend as backend
-from neko.datasets import MNIST
+# from neko.datasets import MNIST
 from neko.evaluator import Evaluator
 from neko.layers import ALIFRNNModel
 from neko.learning_rules import Eprop
 from neko.trainers import Trainer
+import torchvision.datasets as dset
+import torchvision.transforms as transforms
+import torch
 
-x_train, y_train, x_test, y_test = MNIST().load()
-x_train, x_test = x_train / 255., x_test / 255.
+trans = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5,), (1.0,))])
+# if not exist, download mnist dataset
+train_set = dset.MNIST(root='./', train=True, transform=trans, download=True)
+test_set = dset.MNIST(root='./', train=False, transform=trans, download=True)
+
+batch_size = 100
+
+train_loader = torch.utils.data.DataLoader(
+                 dataset=train_set,
+                 batch_size=batch_size,
+                 shuffle=True)
+test_loader = torch.utils.data.DataLoader(
+                dataset=test_set,
+                batch_size=batch_size,
+                shuffle=False)
+
+print('==>>> total trainning batch number: {}'.format(len(train_loader)))
+print('==>>> total testing batch number: {}'.format(len(test_loader)))
 
 model = ALIFRNNModel(128, 10, backend=backend, task_type='classification', return_sequence=False)
 evaluated_model = Evaluator(model=model, loss='categorical_crossentropy', metrics=['accuracy', 'firing_rate'])
 algo = Eprop(evaluated_model, mode='symmetric')
 trainer = Trainer(algo)
-trainer.train(x_train, y_train, epochs=30)
+trainer.train(train_loader,input_size=[28,28], T = 28, n_classes=10, epochs=30)
 ```
 
 ## Example Scripts
